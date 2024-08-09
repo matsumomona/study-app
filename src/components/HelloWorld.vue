@@ -1,34 +1,30 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="helloWorld">
+    <h1>{{ msg }}</h1>    
+    <v-img
+      :aspect-ratio="16/9"
+      :width="width"
+      src="https://cdn.pixabay.com/photo/2024/05/06/06/43/office-8742641_1280.png"
+    ></v-img>
+
+    <h3>閲覧</h3>
+    <v-btn
+      @click="goToPreview"
+      class="btn"
+      depressed
+      elevation="2"
+      large
+    >CLICK</v-btn>
+    
+    <h3>編集</h3>
+    <v-btn
+      @click="goToEdit"
+      class="btn"
+      depressed
+      elevation="2"
+      large
+    >CLICK</v-btn>
+    
   </div>
 </template>
 
@@ -37,12 +33,27 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  methods:{
+    goToPreview() {
+      this.$router.push('/preview'); // Previewページに遷移
+    },
+    goToEdit() {
+      this.$router.push('/edit'); // Editページに遷移
+    }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
+v-img {
+  max-width: 100%; /* 画像が親要素の幅に合わせてリサイズされるように */
+  height: auto; /* 高さは自動的に調整されるように */
+}
+h1{
+  margin: 40px 0;
+}
 h3 {
   margin: 40px 0 0;
 }
@@ -56,5 +67,9 @@ li {
 }
 a {
   color: #42b983;
+}
+
+v-btn{
+  background-color: #42b983;
 }
 </style>
