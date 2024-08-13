@@ -3,11 +3,10 @@
     <h1>{{ msg }}</h1>    
     <v-img
       :aspect-ratio="16/9"
-      :width="width"
       src="https://cdn.pixabay.com/photo/2024/05/06/06/43/office-8742641_1280.png"
     ></v-img>
 
-    <h3>閲覧</h3>
+    <h3>学習履歴</h3>
     <v-btn
       @click="goToPreview"
       class="btn"
@@ -15,8 +14,8 @@
       elevation="2"
       large
     >CLICK</v-btn>
-    
-    <h3>編集</h3>
+
+    <h3>資格</h3>
     <v-btn
       @click="goToEdit"
       class="btn"
@@ -68,8 +67,8 @@ li {
 a {
   color: #42b983;
 }
-
 v-btn{
   background-color: #42b983;
 }
+
 </style>
