@@ -109,7 +109,13 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-            </v-row>   
+            </v-row>
+            <v-row>
+                <v-btn color="primary" @click="readData2">
+                    <v-icon>mdi-update</v-icon>
+                    データを更新
+                </v-btn>
+            </v-row>      
         </v-container>
     </v-app>
 </template>

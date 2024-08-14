@@ -138,7 +138,8 @@
         </v-dialog>
       </v-row>
       <v-row>
-        <v-btn color="primary" @click="updateData">
+        <v-btn color="primary" @click="readData1">
+          <v-icon>mdi-update</v-icon>
           データを更新
         </v-btn>
       </v-row>      
