@@ -27,6 +27,14 @@
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.genre }}</td>
             <td>{{ props.item.progress }}</td>
+            <td>
+              <v-icon
+                small
+                @click="deleteItem1(props.item.study_record_id)"
+              >
+                mdi-delete
+              </v-icon>
+            </td>
           </template>
 
           <!-- <template v-slot:[`column.custom`]="{ item }">
@@ -51,7 +59,7 @@
             </v-icon>
           </template> -->
 
-          <!-- <template v-slot:item="{ item }">
+          <!-- <template v-slot:item.actions="{ item }">
             <v-icon
               small
               @click="deleteItem(item.study_record_id)" 
@@ -99,6 +107,7 @@
                       label="ID"
                       type="number"
                       required
+                      class="custom-text-field"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -110,6 +119,7 @@
                       v-model="name"
                       label="コンテンツタイトル"
                       required
+                      class="custom-text-field"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -121,20 +131,30 @@
                       :items="['Progate', 'Udemy', 'Language', 'Others']"
                       label="ジャンル"
                       required
+                      class="custom-text-field"
                     ></v-select>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="6"
                   >
-                    <v-text-field
+                    <!-- <v-text-field
                       v-model="progress"
                       label="進捗"
                       type="number"
                       min="0"
                       max="100"
                       hint="0~100の数字で入力してください"
-                    ></v-text-field>
+                      class="custom-text-field"
+                    ></v-text-field> -->
+                    <v-slider
+                      v-model="progress"
+                      color="orange"
+                      label="進捗(%)"
+                      min="1"
+                      max="100"
+                      thumb-label
+                    ></v-slider>
                   </v-col>
                 </v-row>
               </v-container>
@@ -142,14 +162,14 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                color="blue darken-1"
+                color="#DCBB64"
                 text
                 @click="dialog = false"
               >
                 Close
               </v-btn>
               <v-btn
-                color="blue darken-1"
+                color="#DCBB64"
                 text
                 @click="addData1"
               >
@@ -166,7 +186,7 @@
         </v-btn>
       </v-row>
 
-      <v-snackbar v-model="snackbar" :timeout="2000" centered tile>
+      <v-snackbar v-model="snackbar" :timeout="4000" centered tile>
           データを追加しました
           <v-btn color="#DCBB64" text @click="snackbar = false">
               Close
@@ -190,7 +210,7 @@ export default {
         { text: 'コンテンツタイトル', value: 'name' },
         { text: 'ジャンル', value: 'genre' },
         { text: '進捗', value: 'progress' },
-        { text: '', value: 'actions' } // ごみ箱アイコン用の列
+        { text: '削除', value: 'actions' } // ごみ箱アイコン用の列
       ],
       study_record_id: '',
       name: '',
@@ -242,12 +262,22 @@ export default {
             console.error('データ追加中にエラーが発生しました:', error);
         }
     },
-    deleteItem(id) {
-      const index = this.items.findIndex(item => item.id === id);
-      if (index !== -1) {
-        this.items.splice(index, 1); // 該当のアイテムを削除
+    // 
+    async deleteItem1(study_record_id) {
+      try {
+        // DELETEリクエストをバックエンドAPIに送信
+        const response = await axios.delete(`https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/DELETESR/${study_record_id}`);
+        
+        // レスポンスが成功した場合、フロントエンドのリストから削除
+        if (response.status === 200) {
+          this.items = this.items.filter(item => item.study_record_id !== study_record_id);
+          console.log('アイテムを削除しました:', study_record_id);
+        }
+      } catch (error) {
+        console.error('アイテムの削除中にエラーが発生しました:', error);
       }
-      
+    },
+
     },
     // async updateData() {
     //   try {
@@ -260,7 +290,6 @@ export default {
     //   }
     // }
   }
-}
 </script>
 
 

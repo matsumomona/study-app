@@ -89,14 +89,14 @@
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
-                            color="blue darken-1"
+                            color="#DCBB64"
                             text
                             @click="dialog = false"
                         >
                             Close
                         </v-btn>
                         <v-btn
-                            color="blue darken-1"
+                            color="#DCBB64"
                             text
                             @click="addData2"
                         >
@@ -113,7 +113,7 @@
                 </v-btn>
             </v-row>
             
-            <v-snackbar v-model="snackbar" :timeout="2000" centered tile>
+            <v-snackbar v-model="snackbar" :timeout="4000" centered tile>
                 データを追加しました
                 <v-btn color="#DCBB64" text @click="snackbar = false">
                     Close
