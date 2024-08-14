@@ -15,7 +15,7 @@
 
           <v-spacer></v-spacer>
           <v-col cols="auto">
-            <v-btn to="/">
+            <v-btn to="/" color="#DCBB64" dark>
               <v-icon>mdi-home</v-icon>
             </v-btn>
           </v-col>

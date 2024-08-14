@@ -29,18 +29,39 @@
             <td>{{ props.item.progress }}</td>
           </template>
 
-          <template v-slot:[`column.custom`]="{ item }">
+          <!-- <template v-slot:[`column.custom`]="{ item }">
             <v-btn @click="deleteItem(item.id)">
               削除
             </v-btn>
-            <!-- <v-icon
+            <v-icon
               small
               @click="deleteItem(item.id)"
               class="mr-2"
             >
               mdi-delete
-            </v-icon> -->
-          </template>
+            </v-icon>
+          </template> -->
+
+          <!-- <template v-slot:item.actions="{ item }">
+            <v-icon
+              small
+              @click="deleteItem(item)"
+            >
+              mdi-delete
+            </v-icon>
+          </template> -->
+
+          <!-- <template v-slot:item="{ item }">
+            <v-icon
+              small
+              @click="deleteItem(item.study_record_id)" 
+            >
+              mdi-delete
+            </v-icon>
+          </template> -->
+
+
+
         </v-data-table>
       </v-row>
 
@@ -52,11 +73,12 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              color="primary"
+              color="#DCBB64"
               dark
               v-bind="attrs"
               v-on="on"
             >
+              <v-icon>mdi-pencil-plus</v-icon>
               新規追加
             </v-btn>
           </template>
@@ -137,12 +159,19 @@
           </v-card>
         </v-dialog>
       </v-row>
-      <v-row>
-        <v-btn color="primary" @click="readData1">
+      <v-row justify="center">
+        <v-btn color="#DCBB64" @click="readData1" dark>
           <v-icon>mdi-update</v-icon>
           データを更新
         </v-btn>
-      </v-row>      
+      </v-row>
+
+      <v-snackbar v-model="snackbar" :timeout="2000" centered tile>
+          データを追加しました
+          <v-btn color="#DCBB64" text @click="snackbar = false">
+              Close
+          </v-btn>
+      </v-snackbar> 
     </v-container>
   </v-app>
 </template>
@@ -154,13 +183,14 @@ export default {
   data() {
     return {
       dialog: false,
+      snackbar: false,
       items1: [], // データ表示用配列
       headers1: [
         { text: 'ID', value: 'study_record_id' },
         { text: 'コンテンツタイトル', value: 'name' },
         { text: 'ジャンル', value: 'genre' },
         { text: '進捗', value: 'progress' },
-        { text: 'アクション', value: 'custom' } // ごみ箱アイコン用の列
+        { text: '', value: 'actions' } // ごみ箱アイコン用の列
       ],
       study_record_id: '',
       name: '',
@@ -202,36 +232,49 @@ export default {
       const response = await axios.post('https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/INSERTSR',param);    
       //結果をコンソールに出力
       console.log(response.data);
+
+      try {
+            await axios.post('https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/INSERTSR', param);
+            this.snackbar = true; // Snackbarを表示
+            await this.readData1(); // データを再取得
+            this.dialog = false; // ダイアログを閉じる
+        } catch (error) {
+            console.error('データ追加中にエラーが発生しました:', error);
+        }
     },
     deleteItem(id) {
       const index = this.items.findIndex(item => item.id === id);
       if (index !== -1) {
         this.items.splice(index, 1); // 該当のアイテムを削除
       }
+      
     },
-    async updateData() {
-      try {
-        // ここでAPIを呼び出してデータを取得
-        const response = await axios.get('/api/data-endpoint');
-        // 取得したデータをitemsに格納
-        this.items = response.data;
-      } catch (error) {
-        console.error('データの更新中にエラーが発生しました:', error);
-      }
-    }
+    // async updateData() {
+    //   try {
+    //     // ここでAPIを呼び出してデータを取得
+    //     const response = await axios.get('/api/data-endpoint');
+    //     // 取得したデータをitemsに格納
+    //     this.items = response.data;
+    //   } catch (error) {
+    //     console.error('データの更新中にエラーが発生しました:', error);
+    //   }
+    // }
   }
 }
 </script>
 
 
-<style>
+<style scoped>
   h1{
     margin: 30px;
   }
   .custom_table{
     max-width: 600px
   }
-  .v-data-footer {
+  /* .v-data-footer {
   display: none;
+  } */
+  .v-btn{
+    margin: 20px 0 !important;
   }
 </style>

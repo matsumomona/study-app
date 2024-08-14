@@ -37,13 +37,9 @@
                     max-width="600px"
                     >
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                        color="primary"
-                        dark
-                        v-bind="attrs"
-                        v-on="on"
-                        >
-                        新規追加
+                        <v-btn color="#DCBB64" dark v-bind="attrs" v-on="on">
+                            <v-icon>mdi-pencil-plus</v-icon>
+                            新規追加
                         </v-btn>
                     </template>
                     <v-card>
@@ -110,12 +106,19 @@
                     </v-card>
                 </v-dialog>
             </v-row>
-            <v-row>
-                <v-btn color="primary" @click="readData2">
+            <v-row justify="center">
+                <v-btn color="#DCBB64" @click="readData2" dark>
                     <v-icon>mdi-update</v-icon>
                     データを更新
                 </v-btn>
-            </v-row>      
+            </v-row>
+            
+            <v-snackbar v-model="snackbar" :timeout="2000" centered tile>
+                データを追加しました
+                <v-btn color="#DCBB64" text @click="snackbar = false">
+                    Close
+                </v-btn>
+            </v-snackbar>
         </v-container>
     </v-app>
 </template>
@@ -127,6 +130,7 @@ export default {
     data() {
         return {
             dialog: false,
+            snackbar: false,
             items2: [],
             headers2: [
                 { text: 'ID', value: 'certificate_id' },
@@ -171,19 +175,31 @@ export default {
             const response = await axios.post('https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/INSERTC',param);
             //結果をコンソールに出力
             console.log(response.data);
+
+            try {
+                await axios.post('https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/INSERTC', param);
+                this.snackbar = true; // Snackbarを表示
+                await this.readData2(); // データを再取得
+                this.dialog = false; // ダイアログを閉じる
+            } catch (error) {
+                console.error('データ追加中にエラーが発生しました:', error);
+            }
         },
     }
 }
 </script>
 
-<style>
+<style scoped>
     h1{
         margin: 30px;
     }
     .custom_table{
         max-width: 600px
     }
-    .v-data-footer {
+    /* .v-data-footer {
         display: none;
+    } */
+    .v-btn{
+    margin: 20px 0 !important;
     }
 </style>

@@ -13,6 +13,8 @@
       depressed
       elevation="2"
       large
+      color="#DCBB64"
+      dark
     >CLICK</v-btn>
 
     <h3>資格</h3>
@@ -22,6 +24,8 @@
       depressed
       elevation="2"
       large
+      color="#DCBB64"
+      dark
     >CLICK</v-btn>
     
   </div>
