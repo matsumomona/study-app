@@ -15,9 +15,8 @@
 
           <v-spacer></v-spacer>
           <v-col cols="auto">
-            <!-- <router-link to="/"><v-icon>mdi-home</v-icon></router-link> -->
             <v-btn to="/">
-              HOME<!-- <v-icon>mdi-home</v-icon> -->
+              <v-icon>mdi-home</v-icon>
             </v-btn>
           </v-col>
         </v-row>

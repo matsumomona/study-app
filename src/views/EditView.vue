@@ -1,7 +1,6 @@
 <template>
     <v-app>
         <v-container>
-            <v-icon>mdi-home</v-icon>
             <v-row 
             class="preview"
             justify="center"

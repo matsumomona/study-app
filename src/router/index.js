@@ -19,7 +19,22 @@ const routes = [
     path: '/edit',
     name: 'edit',
     component: () => import('../views/EditView.vue')
-  }
+  },
+  {
+    path: '*',
+    name: 'NotFoundError',
+    component: HomeView,
+  },
+  {
+    path: '/foo/*',
+    name: 'FooNotFoundError',
+    component: HomeView,
+  },
+  {
+    path: '/bar/*',
+    name: 'BarNotFoundError',
+    component: HomeView,
+  },
 ]
 
 const router = new VueRouter({

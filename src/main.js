@@ -6,6 +6,7 @@ import router from './router'
 // vuetifyインポート
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
+import '@mdi/font/css/materialdesignicons.css'
 //Axiosインポート
 import axios from 'axios';
 
@@ -15,6 +16,10 @@ Vue.prototype.$http = axios; // AxiosをVueインスタンスに追加
 
 new Vue({
   router,
-  vuetify: new Vuetify(),
+  vuetify: new Vuetify({
+    icons: {
+      iconfont: 'mdi', 
+    },
+  }),
   render: h => h(App)
 }).$mount('#app');

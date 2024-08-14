@@ -136,6 +136,11 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+      </v-row>
+      <v-row>
+        <v-btn color="primary" @click="updateData">
+          データを更新
+        </v-btn>
       </v-row>      
     </v-container>
   </v-app>
@@ -201,6 +206,16 @@ export default {
       const index = this.items.findIndex(item => item.id === id);
       if (index !== -1) {
         this.items.splice(index, 1); // 該当のアイテムを削除
+      }
+    },
+    async updateData() {
+      try {
+        // ここでAPIを呼び出してデータを取得
+        const response = await axios.get('/api/data-endpoint');
+        // 取得したデータをitemsに格納
+        this.items = response.data;
+      } catch (error) {
+        console.error('データの更新中にエラーが発生しました:', error);
       }
     }
   }
