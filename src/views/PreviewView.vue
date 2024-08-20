@@ -1,75 +1,39 @@
 <template>
   <v-app>
     <v-container>
+      
       <v-row 
       class="preview"
       justify="center"
       >
-        <h1>study records page</h1>
+        <h1>学習履歴</h1>        
+      </v-row>
+      <v-row 
+      class="preview"
+      justify="center"
+      >
+      <h5>学習したコンテンツを記録しましょう</h5>
       </v-row>
 
       <v-row
       class="mb-3 mt-3"
       justify="center"
       > 
-        <v-col cols="12" class="text-center">
-          <h3>学習</h3>
-        </v-col>
-        
         <v-data-table
         :headers="headers1"
         :items="items1"
         item-key="study_record_id"
         class="custom_table table1 elevation-1"
         >
-          <template v-slot:items="props">
-            <td>{{ props.item.study_record_id }}</td>
-            <td>{{ props.item.name }}</td>
-            <td>{{ props.item.genre }}</td>
-            <td>{{ props.item.progress }}</td>
-            <td>
-              <v-icon
-                small
-                @click="deleteItem1(props.item.study_record_id)"
-              >
-                mdi-delete
-              </v-icon>
-            </td>
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-icon 
+              small 
+              class="mr-2" 
+              @click="showDeleteDialog(item.study_record_id)"
+            >
+              mdi-delete
+            </v-icon>
           </template>
-
-          <!-- <template v-slot:[`column.custom`]="{ item }">
-            <v-btn @click="deleteItem(item.id)">
-              削除
-            </v-btn>
-            <v-icon
-              small
-              @click="deleteItem(item.id)"
-              class="mr-2"
-            >
-              mdi-delete
-            </v-icon>
-          </template> -->
-
-          <!-- <template v-slot:item.actions="{ item }">
-            <v-icon
-              small
-              @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
-          </template> -->
-
-          <!-- <template v-slot:item.actions="{ item }">
-            <v-icon
-              small
-              @click="deleteItem(item.study_record_id)" 
-            >
-              mdi-delete
-            </v-icon>
-          </template> -->
-
-
-
         </v-data-table>
       </v-row>
 
@@ -92,28 +56,26 @@
           </template>
           <v-card>
             <v-card-title>
-              <span class="text-h5">Study Record</span>
+              <span class="card-title-text">新規追加</span>
             </v-card-title>
             <v-card-text>
               <v-container>
                 <v-row>
                   <v-col
                     cols="12"
-                    sm="6"
-                    md="4"
                   >
                     <v-text-field
-                      v-model="study_record_id"
+                      v-model=nextId
                       label="ID"
                       type="number"
                       required
-                      class="custom-text-field"
+                      readonly
+                      class="id-text-field"
                     ></v-text-field>
                   </v-col>
                   <v-col
                     cols="12"
-                    sm="6"
-                    md="4"
+                    class="card-text-cols"
                   >
                     <v-text-field
                       v-model="name"
@@ -124,7 +86,7 @@
                   </v-col>
                   <v-col
                     cols="12"
-                    sm="6"
+                    class="card-text-cols"
                   >
                     <v-select
                       v-model="genre"
@@ -136,17 +98,8 @@
                   </v-col>
                   <v-col
                     cols="12"
-                    sm="6"
+                    class="card-text-cols slider-cols"
                   >
-                    <!-- <v-text-field
-                      v-model="progress"
-                      label="進捗"
-                      type="number"
-                      min="0"
-                      max="100"
-                      hint="0~100の数字で入力してください"
-                      class="custom-text-field"
-                    ></v-text-field> -->
                     <v-slider
                       v-model="progress"
                       color="orange"
@@ -179,19 +132,46 @@
           </v-card>
         </v-dialog>
       </v-row>
+
       <v-row justify="center">
-        <v-btn color="#DCBB64" @click="readData1" dark>
+        <v-btn 
+          color="#DCBB64"  
+          @click="readData1" 
+          dark
+        >
           <v-icon>mdi-update</v-icon>
           データを更新
         </v-btn>
       </v-row>
 
-      <v-snackbar v-model="snackbar" :timeout="4000" centered tile>
-          データを追加しました
-          <v-btn color="#DCBB64" text @click="snackbar = false">
+      <v-snackbar 
+        v-model="snackbar" 
+        top
+      >
+        データを追加しました
+        <v-card-actions class="pa-0">
+            <v-btn 
+              color="#DCBB64" 
+              text 
+              @click="snackbar = false"
+            >
               Close
-          </v-btn>
-      </v-snackbar> 
+            </v-btn>
+        </v-card-actions>
+      </v-snackbar>
+
+      <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card dark>
+            <v-card-title class="delete-title-text">本当に削除して良いですか?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="#DCBB64" text @click="closeDelete">Cancel</v-btn>
+              <v-btn color="#DCBB64" text @click="deleteItem1">OK</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
     </v-container>
   </v-app>
 </template>
@@ -204,106 +184,166 @@ export default {
     return {
       dialog: false,
       snackbar: false,
-      items1: [], // データ表示用配列
+      nextId: null,
+      dialogDelete: false, 
+      idToDelete: null, 
+      items1: [], 
       headers1: [
-        { text: 'ID', value: 'study_record_id' },
-        { text: 'コンテンツタイトル', value: 'name' },
-        { text: 'ジャンル', value: 'genre' },
-        { text: '進捗', value: 'progress' },
-        { text: '削除', value: 'actions' } // ごみ箱アイコン用の列
+        // { text: 'ID', value: 'study_record_id' },
+        { text: 'コンテンツタイトル', value: 'name', sortable: false },
+        { text: 'ジャンル', value: 'genre', sortable: false },
+        { text: '進捗(%)', value: 'progress', sortable: false },
+        { text: '削除', value: 'actions', sortable: false } // ごみ箱アイコン用の列
       ],
       study_record_id: '',
       name: '',
       genre: '',
-      progress: ''
+      progress: '', 
     };
   },
+
   created() {
-    this.readData1(); // 必要なメソッドを呼び出す
+    this.readData1();
   },
+
   methods: {
+    //データ参照  
     async readData1() {
       try {
         const response = await axios.get('https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/SELECTALLSR');
         if (response.data && response.data.List) {
           this.items1 = response.data.List;
+
+          const ids = this.items1.map(item => Number(item.study_record_id));
+          this.nextId = ids.length ? Math.max(...ids) + 1 : 1;
+
         } else {
           console.error('Unexpected response format:', response.data);
         }
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     },
-    // DBにデータを追加する関数
+
+    //データ追加  
     addData1: async function() {
-      //IDの入力チェック（空白か数字以外なら終了）
-      if(!this.study_record_id || isNaN(this.study_record_id)){
+      if(!this.nextId || isNaN(this.nextId)){
           console.log("IDに数値が入力されていません");
           return;
       }
       //POSTメソッドで送るパラメーターを作成
       const param = {
-          study_record_id : this.study_record_id,
+          study_record_id : this.nextId,
           name : this.name,
           genre : this.genre,
           progress : this.progress
       }
-       //INSERT用のAPIを呼び出し
+      //INSERT用のAPIを呼び出し
       const response = await axios.post('https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/INSERTSR',param);    
-      //結果をコンソールに出力
       console.log(response.data);
 
+      //フロントエンドのデータを更新
       try {
             await axios.post('https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/INSERTSR', param);
-            this.snackbar = true; // Snackbarを表示
+            this.snackbar = true;
             await this.readData1(); // データを再取得
-            this.dialog = false; // ダイアログを閉じる
+            this.dialog = false;
         } catch (error) {
             console.error('データ追加中にエラーが発生しました:', error);
         }
     },
-    // 
-    async deleteItem1(study_record_id) {
-      try {
-        // DELETEリクエストをバックエンドAPIに送信
-        const response = await axios.delete(`https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/DELETESR/${study_record_id}`);
-        
-        // レスポンスが成功した場合、フロントエンドのリストから削除
-        if (response.status === 200) {
-          this.items = this.items.filter(item => item.study_record_id !== study_record_id);
-          console.log('アイテムを削除しました:', study_record_id);
-        }
-      } catch (error) {
-        console.error('アイテムの削除中にエラーが発生しました:', error);
-      }
+
+    //データ削除
+    showDeleteDialog(item) {
+      this.idToDelete = item; // 削除対象アイテムのIDを入れる変数
+      this.dialogDelete = true; // ダイアログを表示
+      //console.log('ID:', this.idToDelete);
     },
 
+    closeDelete() {
+      this.dialogDelete = false;
     },
-    // async updateData() {
-    //   try {
-    //     // ここでAPIを呼び出してデータを取得
-    //     const response = await axios.get('/api/data-endpoint');
-    //     // 取得したデータをitemsに格納
-    //     this.items = response.data;
-    //   } catch (error) {
-    //     console.error('データの更新中にエラーが発生しました:', error);
-    //   }
-    // }
+
+    async deleteItem1() {
+      this.dialogDelete = false; // ダイアログを閉じる
+      if (this.idToDelete === null) {
+        console.error('削除対象のIDが設定されていません');
+        return;
+      }
+
+      try {
+        const param = {
+          study_record_id: this.idToDelete
+        }
+        //DELETE用のAPI呼び出し
+        const response = await axios.post('https://m3h-matsumoto-functionapiapp2.azurewebsites.net/api/DELETESR',param);
+        console.log(response.data);
+
+        if (response.status === 200) {
+          if (!this.items) {
+            this.items = [];
+          }
+          // フロントエンドのデータ更新
+          if (this.items) {
+            this.items = this.items.filter(item => item.study_record_id !== this.idToDelete);
+            await this.readData1(); // データを再取得
+            console.log('アイテムを削除しました:', this.idToDelete);
+          } else {
+            console.error('itemsがundefinedまたはnullです');
+          }
+        } 
+
+      } catch (error) {
+      console.error('削除中にエラーが発生しました:', error.message, error.stack);
+      }      
+    }
   }
+}  
 </script>
 
 
 <style scoped>
-  h1{
-    margin: 30px;
-  }
-  .custom_table{
-    max-width: 600px
-  }
-  /* .v-data-footer {
+h1{
+  margin: 30px;
+  font-family: "Zen Maru Gothic", serif;
+}
+h5{
+  margin-bottom: 20px;
+  font-family: "Zen Maru Gothic", serif;
+}
+.custom_table{
+  max-width: 600px;
+  font-family: "Zen Maru Gothic", serif;
+}
+/* .v-data-footer {
+display: none;
+} */
+.v-btn{
+  margin: 20px 0 !important;
+  font-family: "Zen Maru Gothic", serif;
+}
+.pa-0 {
+  justify-content: flex-end !important; /* 右寄せにする */
+}
+.id-text-field{
   display: none;
-  } */
-  .v-btn{
-    margin: 20px 0 !important;
-  }
+}
+.card-title-text{
+  font-family: "Zen Maru Gothic", serif;
+  color: #2c3e50;
+}
+.card-text-cols{
+  padding: 20px 70px;
+}
+.slider-cols{
+  padding-top: 35px;
+}
+.delete-title-text{
+  font-family: "Zen Maru Gothic", serif;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
 </style>

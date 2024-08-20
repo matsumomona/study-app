@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Let's Study"/>
+    <HelloWorld msg="Let's Study!"/>
   </div>
 </template>
 
@@ -16,6 +16,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   
 </style>

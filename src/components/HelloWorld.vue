@@ -48,17 +48,19 @@ export default {
 }
 </script>
 
-
 <style scoped>
 v-img {
-  max-width: 100%; /* 画像が親要素の幅に合わせてリサイズされるように */
-  height: auto; /* 高さは自動的に調整されるように */
+  max-width: 100%; 
+  height: auto; 
 }
 h1{
   margin: 40px 0;
+  color: #2c3e50 !important;
+  font-family: "Slackside One", cursive;
 }
 h3 {
   margin: 40px 0 0;
+  font-family: "Zen Maru Gothic", serif;
 }
 ul {
   list-style-type: none;
@@ -68,11 +70,7 @@ li {
   display: inline-block;
   margin: 0 10px;
 }
-a {
-  color: #42b983;
+.btn{
+  font-family: "Zen Maru Gothic", serif;
 }
-v-btn{
-  background-color: #42b983;
-}
-
 </style>
