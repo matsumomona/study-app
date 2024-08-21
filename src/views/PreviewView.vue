@@ -23,7 +23,7 @@
         :headers="headers1"
         :items="items1"
         item-key="study_record_id"
-        class="custom_table table1 elevation-1"
+        class="custom_table elevation-1"
         >
           <template v-slot:[`item.actions`]="{ item }">
             <v-icon 
@@ -316,9 +316,6 @@ h5{
   max-width: 600px;
   font-family: "Zen Maru Gothic", serif;
 }
-/* .v-data-footer {
-display: none;
-} */
 .v-btn{
   margin: 20px 0 !important;
   font-family: "Zen Maru Gothic", serif;
