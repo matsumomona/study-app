@@ -145,7 +145,8 @@
       </v-row>
 
       <v-snackbar 
-        v-model="snackbar" 
+        v-model="snackbar"
+        :timeout="2000" 
         top
       >
         データを追加しました
